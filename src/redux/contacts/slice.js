@@ -8,7 +8,6 @@ const contactsInitialState = {
     isLoading: false,
     error: null
 };
-export const operationsThunk = [createContact, deleteContact, getContacts];
 
 export const contactsSlice = createSlice({
     name: 'contacts',
