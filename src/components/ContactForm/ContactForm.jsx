@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import { getContacts } from 'redux/selectors';
+import { selectContacts } from 'redux/selectors';
 import { nanoid } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contacts/slice';
 import { toast } from 'react-toastify';
+import {createContact } from 'redux/operations';
 
 import optionNotification from 'components/Notification/Notification';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,27 +12,32 @@ import css from './ContactForm.module.css'
 
 export default function ContactForm() {
     const [name, setName] = useState('')
-    const [number, setNumber] = useState('')
+    const [phone, setPhone] = useState('')
     const dispatch = useDispatch();
-    const contacts = useSelector(getContacts)
+    const { items } = useSelector(selectContacts)
+    const dataContact = {
+        name,
+        phone
+    }
 
     const nameNormalize = name.toLowerCase();
-    const isExist = contacts.find(contact => nameNormalize === contact.name.toLocaleLowerCase())
+    const isExist = items.find(item => nameNormalize === item.name.toLocaleLowerCase())
 
     const handleChange = e => {
-    const { name, value } = e.target;
-    switch (name) {
-        case 'name':
-            setName(value)
-            break;
-        case 'number':
-            setNumber(value)
-            break;
+        const { name, value } = e.target;
+ 
+        switch (name) {
+            case 'name':
+                setName(value)
+                break;
+            case 'number':
+                setPhone(value)
+                break;
     
-        default:
-            break;
-    }
-    }
+            default:
+                break;
+        };
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -41,9 +46,9 @@ export default function ContactForm() {
             toast.warn(`${name} is already in contacts.`, optionNotification)
             return
         } else {
-            dispatch(addContact(name, number));
+            dispatch(createContact(dataContact));
             setName('');
-            setNumber('');
+            setPhone('');
         };
     }
 
@@ -70,7 +75,7 @@ export default function ContactForm() {
                     id={idNumberInput}
                     type="tel"
                     name="number"
-                    value={number}
+                    value={phone}
                     onChange={handleChange}
                     pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
                     title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"

@@ -2,12 +2,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // import PropTypes from 'prop-types';
 import { setFilter } from 'redux/filters/slice';
-import { getFilterValue } from 'redux/selectors';
+import { selectFilterValue } from 'redux/selectors';
 
 import css from './Filter.module.css';
 
 const Filter = () => {
-    const filter = useSelector(getFilterValue);
+    const filter = useSelector(selectFilterValue);
     const dispatch = useDispatch()
     
 
